@@ -1,0 +1,30 @@
+service cloud.firestore {
+ match /databases/{database}/documents {
+  // ===== ПРАВИЛО 1: ПОЛЬЗОВАТЕЛИ =====
+// Только сам пользователь видит свой профиль
+match /users/{userId} {
+  allow read, write: if request.auth.uid == userId;
+}
+
+// ===== ПРАВИЛО 2: СООБЩЕНИЯ =====
+// Все авторизованные видят сообщения
+// Писать может только автор сообщения
+match /messages/{messageId} {
+  // Читать может любой авторизованный
+  allow read: if request.auth != null;
+  
+  // Писать новое сообщение
+  allow create: if request.auth != null &&
+                   request.resource.data.userId == request.auth.uid &&
+                   request.resource.data.timestamp != null;
+  
+  // Удалять/менять только свои сообщения
+  allow update, delete: if request.auth != null &&
+                          resource.data.userId == request.auth.uid;
+}
+
+// ===== ПРАВИЛО 3: CONVERSATIONS =====
+// Авторизованные пользователи могут читать/писать
+match /conversations/{conversationId} {
+  allow read, write: if request.auth != null;
+}
