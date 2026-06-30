@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPad - Мессенджер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>🎯 PingPad</h1>
+            </div>
+            
+            <div class="auth-section">
+                <input type="email" id="emailInput" placeholder="Email" class="input-field">
+                <input type="password" id="passwordInput" placeholder="Пароль" class="input-field">
+                <button id="loginBtn" class="btn btn-primary">Вход</button>
+                <button id="registerBtn" class="btn btn-secondary">Регистрация</button>
+                <button id="logoutBtn" class="btn btn-danger" style="display:none;">Выход</button>
+            </div>
+
+            <div class="conversations-section" id="conversationsSection" style="display:none;">
+                <h3>💬 Чаты</h3>
+                <button id="newChatBtn" class="btn btn-primary">+ Новый чат</button>
+                <div id="conversationsList" class="conversations-list"></div>
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <div id="loginPrompt" class="login-prompt">
+                <h2>Добро пожаловать в PingPad! 👋</h2>
+                <p>Войди или зарегистрируйся, чтобы начать общение</p>
+            </div>
+
+            <div id="chatContainer" class="chat-container" style="display:none;">
+                <div class="chat-header">
+                    <h2 id="chatTitle">Выберите чат</h2>
+                </div>
+
+                <div class="messages-area" id="messagesArea"></div>
+
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Напишите сообщение..." class="input-field">
+                    <button id="sendBtn" class="btn btn-primary">➤ Отправить</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
