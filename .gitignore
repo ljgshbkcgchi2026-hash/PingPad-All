@@ -1,0 +1,41 @@
+# ===== NODE MODULES =====
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# ===== ENVIRONMENT VARIABLES =====
+.env
+.env.local
+.env.*.local
+
+# ===== FIREBASE ADMIN KEYS =====
+serviceAccountKey.json
+firebase-admin-*.json
+*-key.json
+
+# ===== IDE & EDITOR =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ===== BUILD & DIST =====
+dist/
+build/
+.next/
+out/
+
+# ===== LOGS =====
+*.log
+logs/
+
+# ===== OS FILES =====
+Thumbs.db
+.DS_Store
+
+# ===== ASSETS =====
+icon.png
+favicon.ico
