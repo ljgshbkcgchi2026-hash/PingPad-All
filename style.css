@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f2f5;
@@ -23,6 +28,7 @@ body {
     padding: 20px;
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 .logo h1 {
@@ -45,6 +51,12 @@ body {
     border: none;
     border-radius: 6px;
     font-size: 14px;
+    font-family: inherit;
+}
+
+.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
 }
 
 .btn {
@@ -57,6 +69,15 @@ body {
     font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
 }
 
 .btn-primary {
@@ -66,7 +87,6 @@ body {
 
 .btn-primary:hover {
     background: #5568d3;
-    transform: translateY(-2px);
 }
 
 .btn-secondary {
@@ -76,7 +96,6 @@ body {
 
 .btn-secondary:hover {
     background: #63398b;
-    transform: translateY(-2px);
 }
 
 .btn-danger {
@@ -109,6 +128,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
+    word-break: break-word;
 }
 
 .conversation-item:hover {
@@ -118,6 +138,7 @@ body {
 
 .conversation-item.active {
     background: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
 }
 
 main {
@@ -125,6 +146,7 @@ main {
     display: flex;
     flex-direction: column;
     background: #f0f2f5;
+    overflow: hidden;
 }
 
 .login-prompt {
@@ -151,6 +173,7 @@ main {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
 }
 
 .chat-header {
@@ -158,11 +181,13 @@ main {
     background: white;
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
 }
 
 .chat-header h2 {
     color: #667eea;
     font-size: 20px;
+    margin: 0;
 }
 
 .messages-area {
@@ -218,6 +243,7 @@ main {
     border-top: 1px solid #e0e0e0;
     display: flex;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .input-area .input-field {
@@ -225,12 +251,14 @@ main {
     padding: 12px;
     border: 1px solid #e0e0e0;
     border-radius: 20px;
+    margin-bottom: 0;
 }
 
 .input-area .btn {
     width: auto;
     padding: 12px 30px;
     margin: 0;
+    flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -240,15 +268,37 @@ main {
 
     .sidebar {
         width: 100%;
-        height: auto;
+        max-height: 200px;
     }
 
     main {
-        height: auto;
+        min-height: 400px;
     }
 
     .message {
         max-width: 85%;
+    }
+
+    .logo h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .auth-section {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+    }
+
+    .input-area {
+        flex-wrap: wrap;
+    }
+
+    .input-area .input-field {
+        flex-basis: 100%;
+    }
+
+    .input-area .btn {
+        width: 100%;
     }
 }
 
