@@ -1,8 +1,3 @@
-// Firebase импорты
-const { initializeApp } = window;
-const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } = window;
-const { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp } = window;
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -100,23 +95,27 @@ onAuthStateChanged(auth, (user) => {
 });
 
 async function createDefaultConversation() {
+    if (!currentUser) return;
+    
     try {
         const q = query(collection(db, 'conversations'), where('userId', '==', currentUser.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            if (snapshot.empty) {
-                addDoc(collection(db, 'conversations'), {
-                    userId: currentUser.uid,
-                    name: 'Основной чат',
-                    createdAt: serverTimestamp()
-                });
-            }
-        });
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            await addDoc(collection(db, 'conversations'), {
+                userId: currentUser.uid,
+                name: 'Основной чат',
+                createdAt: serverTimestamp()
+            });
+        }
     } catch (error) {
         console.error('Ошибка создания чата:', error);
     }
 }
 
 function loadConversations() {
+    if (!currentUser) return;
+    
     const q = query(
         collection(db, 'conversations'),
         where('userId', '==', currentUser.uid),
@@ -134,6 +133,8 @@ function loadConversations() {
             div.addEventListener('click', () => selectConversation(doc.id, conv.name));
             conversationsList.appendChild(div);
         });
+    }, (error) => {
+        console.error('Ошибка загрузки чатов:', error);
     });
 }
 
@@ -146,7 +147,11 @@ function selectConversation(convId, convName) {
     document.querySelectorAll('.conversation-item').forEach(item => {
         item.classList.remove('active');
     });
-    event.target.classList.add('active');
+    
+    const selected = Array.from(document.querySelectorAll('.conversation-item')).find(
+        item => item.textContent === convName
+    );
+    if (selected) selected.classList.add('active');
 }
 
 function loadMessages() {
@@ -165,6 +170,8 @@ function loadMessages() {
             displayMessage(msg);
         });
         messagesArea.scrollTop = messagesArea.scrollHeight;
+    }, (error) => {
+        console.error('Ошибка загрузки сообщений:', error);
     });
 }
 
@@ -173,14 +180,25 @@ function displayMessage(msg) {
     const isOwn = msg.userId === currentUser.uid;
     div.className = `message ${isOwn ? 'message-own' : 'message-other'}`;
     
-    const time = msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString('ru-RU') : '';
+    const time = msg.timestamp 
+        ? new Date(msg.timestamp.toDate()).toLocaleTimeString('ru-RU', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }) 
+        : '';
     
     div.innerHTML = `
-        <div>${msg.text}</div>
+        <div>${escapeHtml(msg.text)}</div>
         <div class="message-info">${time}</div>
     `;
     
     messagesArea.appendChild(div);
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 sendBtn.addEventListener('click', async () => {
@@ -205,18 +223,19 @@ sendBtn.addEventListener('click', async () => {
 });
 
 messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
         sendBtn.click();
     }
 });
 
 newChatBtn.addEventListener('click', async () => {
     const chatName = prompt('Введи имя чата:');
-    if (chatName) {
+    if (chatName && chatName.trim()) {
         try {
             await addDoc(collection(db, 'conversations'), {
                 userId: currentUser.uid,
-                name: chatName,
+                name: chatName.trim(),
                 createdAt: serverTimestamp()
             });
         } catch (error) {
