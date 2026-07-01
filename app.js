@@ -1,3 +1,8 @@
+// Firebase импорты
+const { initializeApp } = window;
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } = window;
+const { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp } = window;
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
